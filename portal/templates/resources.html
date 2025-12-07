@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Student Resources</h2>
+    
+    <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+    <br><br>
+
+    <h3>Project Ideas</h3>
+    {% if projects %}
+        <ul>
+            {% for project in projects %}
+                <li>
+                    <strong>{{ project.title }}</strong> - {{ project.domain }}
+                    <p>{{ project.description }}</p>
+                    
+                    <a href="{% url 'edit_project' project.id %}" 
+                       style="color: blue; text-decoration: none; font-weight: bold; margin-right: 15px;">
+                       [Edit]
+                    </a>
+
+                    <a href="{% url 'delete_project' project.id %}" 
+                       style="color: red; text-decoration: none; font-weight: bold;">
+                       [Delete]
+                    </a>
+                </li>
+                <br> {% endfor %}
+        </ul>
+    {% else %}
+        <p>No projects added yet.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Hiring Programs</h3>
+    {% if programs %}
+        <ul>
+            {% for program in programs %}
+                <li>
+                    <strong>{{ program.company_name }}</strong>: {{ program.program_name }}
+                    <br>
+                    <small>Eligibility: {{ program.eligibility_criteria }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No programs available yet.</p>
+    {% endif %}
+
+{% endblock %}

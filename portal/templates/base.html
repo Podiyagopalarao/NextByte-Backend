@@ -1,0 +1,29 @@
+
+{% load static %} <!DOCTYPE html>
+<html>
+<head>
+    <title>NextByte Portal</title>
+    <link rel="stylesheet" href="{% static 'portal/style.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'resources' %}">Resources</a>
+        
+        {% if user.is_authenticated %}
+            <span style="color: #bdc3c7; margin-left: 20px;">User: {{ user.username }}</span>
+            <a href="{% url 'logout' %}" style="color: #e74c3c; float: right;">Logout</a>
+        {% else %}
+            <div style="float: right;">
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            </div>
+        {% endif %}
+    </nav>
+    
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

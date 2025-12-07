@@ -1,0 +1,107 @@
+
+/* 1. Global Reset & Body */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9; /* Light grey background */
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* 2. Navigation Bar */
+nav {
+    background-color: #2c3e50; /* Dark Blue */
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between; /* Pushes content to edges */
+    align-items: center;
+}
+
+nav a {
+    color: #ecf0f1; /* White-ish text */
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 20px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #1abc9c; /* Green highlight on hover */
+}
+
+/* 3. Headings */
+h1, h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+h2 {
+    border-bottom: 2px solid #1abc9c;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    display: inline-block;
+}
+
+/* 4. Lists (for Projects & Programs) */
+ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+}
+
+li {
+    background: white;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-left: 5px solid #1abc9c; /* Green accent bar */
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 5. Forms (Login/Register) */
+form {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin: 0 auto; /* Centers the form */
+}
+
+input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+}
+
+/* 6. Buttons */
+button {
+    background-color: #1abc9c;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #16a085; /* Darker green */
+}
+
+/* 7. Links */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
