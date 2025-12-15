@@ -1,50 +1,94 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Resources{% endblock %}
 
 {% block content %}
-    <h2>Student Resources</h2>
+    <h2>Resources & Programs</h2>
     
-    <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
-    <br><br>
-
-    <h3>Project Ideas</h3>
-    {% if projects %}
-        <ul>
-            {% for project in projects %}
-                <li>
-                    <strong>{{ project.title }}</strong> - {{ project.domain }}
-                    <p>{{ project.description }}</p>
-                    
-                    <a href="{% url 'edit_project' project.id %}" 
-                       style="color: blue; text-decoration: none; font-weight: bold; margin-right: 15px;">
-                       [Edit]
-                    </a>
-
-                    <a href="{% url 'delete_project' project.id %}" 
-                       style="color: red; text-decoration: none; font-weight: bold;">
-                       [Delete]
-                    </a>
-                </li>
-                <br> {% endfor %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
         </ul>
-    {% else %}
-        <p>No projects added yet.</p>
     {% endif %}
+
+    <div class="resource-add-form card p-4 mb-4 shadow-sm">
+        <h3>Add New Resource</h3>
+        <form method="POST" action="{% url 'resources' %}"> 
+            {% csrf_token %} 
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit Resource</button>
+        </form>
+    </div>
 
     <hr>
 
-    <h3>Hiring Programs</h3>
-    {% if programs %}
-        <ul>
-            {% for program in programs %}
-                <li>
-                    <strong>{{ program.company_name }}</strong>: {{ program.program_name }}
-                    <br>
-                    <small>Eligibility: {{ program.eligibility_criteria }}</small>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No programs available yet.</p>
-    {% endif %}
+    <div class="projects-list">
+        <h3>Available Projects</h3>
+        {% for project in projects %}
+            <div class="resource-item border p-3 mb-2">
+                <h4>{{ project.title }}</h4>
+                <p>{{ project.description }}</p>
+                <small>
+                    **Type:** Project | 
+                    **Domain:** {{ project.domain.name }} |
+                    **Added by:** {{ project.created_by.username }} | 
+                    **Date:** {{ project.created_at|date:"M d, Y" }}
+                </small>
+            </div>
+        {% empty %}
+            <p>No projects have been added yet.</p>
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    <div class="programs-list">
+        <h3>Available Hiring Programs</h3>
+        {% for program in programs %}
+            <div class="resource-item border p-3 mb-2">
+                <h4>{{ program.title }}</h4>
+                <p>{{ program.description }}</p>
+                <small>
+                    **Type:** Program | 
+                    **Company:** {{ program.company_name }} |
+                    **Domain:** {{ program.domain.name }} |
+                    **Added by:** {{ program.created_by.username }} | 
+                    **Date:** {{ program.created_at|date:"M d, Y" }}
+                </small>
+            </div>
+        {% empty %}
+            <p>No hiring programs have been added yet.</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // A. Get the dropdown element (Django automatically assigns id='id_resource_type')
+            const resourceTypeSelect = document.getElementById('id_resource_type');
+            
+            // B. Find the container of the company_name field. 
+            // Django wraps the field in a <p> tag by default.
+            const companyNameField = document.getElementById('id_company_name').closest('p');
+            
+            function toggleCompanyNameField() {
+                // If the selected value is 'PROGRAM' (Hiring Program), show the field
+                if (resourceTypeSelect.value === 'PROGRAM') {
+                    companyNameField.style.display = 'block';
+                } else {
+                    // For 'PROJECT' or anything else, hide the field
+                    companyNameField.style.display = 'none';
+                }
+            }
+
+            // C. Run the check once when the page loads
+            toggleCompanyNameField();
+
+            // D. Run the check every time the dropdown selection changes
+            resourceTypeSelect.addEventListener('change', toggleCompanyNameField);
+        });
+    </script>
 
 {% endblock %}

@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Too Many Requests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 50px; 
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 { 
+            color: #cc0000; 
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .security-note {
+            margin-top: 20px;
+            padding: 10px;
+            border-left: 5px solid #007bff;
+            background-color: #e9f5ff;
+            color: #0056b3;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>429 - Too Many Requests</h1>
+        <p>You have exceeded the request limit for this resource (10 requests per minute).</p>
+        <p>Please wait a few moments before attempting to access the dashboard again.</p>
+        
+        <div class="security-note">
+            This is a security feature to prevent automated data scraping and abuse of the application's resources.
+        </div>
+        
+        <p><a href="/">Return to Login Page</a></p>
+    </div>
+</body>
+</html>

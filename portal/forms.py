@@ -1,47 +1,49 @@
+# portal/forms.py
+
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
-from .models import ProjectIdea, CompanyProgram  # <--- Added CompanyProgram
+from django.contrib.auth.forms import UserCreationForm as DjangoUserCreationForm 
 
-# 1. Login Form
+# --- Import your project models ---
+from .models import Resource, CustomUser 
+
+
+# --- Custom Registration Form (Fixed for CustomUser) ---
+
+class CustomUserCreationForm(DjangoUserCreationForm):
+    """
+    Form using the CustomUser model for registration.
+    """
+    class Meta(DjangoUserCreationForm.Meta):
+        model = CustomUser
+        fields = ('username', 'email') 
+
+
+# --- LoginForm (Cleaned: Standard AuthenticationForm) ---
+
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    """
+    Standard AuthenticationForm.
+    """
+    username = forms.CharField(max_length=254, 
+                               widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'}))
+    password = forms.CharField(label=("Password"),
+                               widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
-# 2. Register Form
-class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}))
 
+# --- ResourceForm (Final Version with 'url' field) ---
+
+class ResourceForm(forms.ModelForm):
+    """
+    Form for adding Resources (Projects or Programs).
+    """
     class Meta:
-        model = User
-        fields = ['username', 'email', 'password']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-        if password != confirm_password:
-            raise forms.ValidationError("Passwords do not match")
-
-# 3. Project Form
-class ProjectForm(forms.ModelForm):
-    class Meta:
-        model = ProjectIdea
-        fields = ['title', 'domain', 'description']
+        model = Resource
+        # >>> FINAL FIX: 'url' field is added back here.
+        fields = ['title', 'description', 'url', 'resource_type'] 
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Project Title'}),
-            'domain': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Domain (e.g. AI, Web)'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-        }
-
-# 4. Program Form (NEW!)
-class ProgramForm(forms.ModelForm):
-    class Meta:
-        model = CompanyProgram
-        fields = ['company_name', 'program_name', 'eligibility_criteria']
-        widgets = {
-            'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company Name (e.g. Google)'}),
-            'program_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Program Name (e.g. Summer Intern)'}),
-            'eligibility_criteria': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Who can apply?'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'url': forms.URLInput(attrs={'class': 'form-control'}), # This widget is now active
+            'resource_type': forms.Select(attrs={'class': 'form-control'}),
         }

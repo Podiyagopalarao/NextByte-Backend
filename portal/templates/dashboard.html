@@ -1,19 +1,16 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <h1>Welcome to NextByte!</h1>
-    <p>This is your student dashboard.</p>
-    
-    <a href="{% url 'resources' %}">View Learning Resources</a>
-    
-    <br><br> <a href="{% url 'add_project' %}">
-        <button style="width: 200px;">+ Add New Project</button>
-    </a>
+    <h1>Welcome, {{ user.username }}!</h1>
+    <p>This is your student dashboard for NextByte.</p>
 
-    <a href="{% url 'add_program' %}">
-        <button style="width: 200px; background-color: #e67e22; margin-left: 10px;">
-            + Add Hiring Program
-        </button>
-    </a>
+    <a href="{% url 'resources' %}" class="btn btn-warning">Go to Resources</a>
+    
+    <div style="margin-top: 20px;">
+        <a href="#" class="btn btn-success">+ Add New Project (Placeholder)</a>
+        <a href="#" class="btn btn-success">+ Add Hiring Program (Placeholder)</a>
+    </div>
 
 {% endblock %}

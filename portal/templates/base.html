@@ -1,18 +1,24 @@
 
-{% load static %} <!DOCTYPE html>
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>NextByte Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextByte Portal - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'portal/style.css' %}">
 </head>
 <body>
+
     <nav>
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <a href="{% url 'resources' %}">Resources</a>
         
         {% if user.is_authenticated %}
-            <span style="color: #bdc3c7; margin-left: 20px;">User: {{ user.username }}</span>
-            <a href="{% url 'logout' %}" style="color: #e74c3c; float: right;">Logout</a>
+            <div style="float: right;">
+                <span style="color: white; padding: 14px 16px;">User: {{ user.username }}</span>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
         {% else %}
             <div style="float: right;">
                 <a href="{% url 'login' %}">Login</a>
@@ -20,8 +26,16 @@
             </div>
         {% endif %}
     </nav>
-    
+
     <div class="content">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         {% block content %}
         {% endblock %}
     </div>

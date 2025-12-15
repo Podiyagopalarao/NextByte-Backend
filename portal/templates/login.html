@@ -1,13 +1,92 @@
-
-{% extends 'base.html' %}
-
-{% block content %}
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
     
-    <p>New here? <a href="{% url 'register' %}">Create an account</a></p>
-{% endblock %}
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 300px; }
+        h1 { text-align: center; color: #333; }
+        label { display: block; margin-top: 10px; } 
+        input[type="text"], input[type="password"] { width: 95%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+        button:hover { background-color: #218838; }
+        input[disabled], button[disabled] { cursor: not-allowed; background-color: #e9ecef !important; opacity: 0.65; }
+        .message { padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-bottom: 2px solid #721c24; }
+        .info { background-color: #cfe2ff; color: #071358; border: 1px solid #b6d4fe; }
+        #countdown-timer { font-weight: bold; color: #721c24; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                    {% if is_locked_out %}
+                        <div id="countdown-timer"></div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <h1>Login</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required {% if is_locked_out %}disabled{% endif %}>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required {% if is_locked_out %}disabled{% endif %}>
+
+            <button type="submit" {% if is_locked_out %}disabled{% endif %}>Login</button>
+
+            <p style="text-align: center; margin-top: 15px;">
+                Don't have an account? <a href="{% url 'register' %}">Register here</a>.
+            </p>
+        </form>
+
+    </div>
+
+    <script>
+        const isLockedOut = {{ is_locked_out|lower }};
+        let timeRemaining = parseInt("{{ lockout_time_remaining }}");
+        const timerDisplay = document.getElementById('countdown-timer');
+
+        function formatTime(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes}m ${seconds}s`;
+        }
+
+        function updateCountdown() {
+            if (timeRemaining <= 0) {
+                // Timer finished, clear interval, and reload the page to check cache/re-enable form
+                clearInterval(countdownInterval);
+                timerDisplay.innerText = "Access restoring...";
+                window.location.reload(); 
+                return;
+            }
+
+            // Update text and decrement time
+            timerDisplay.innerText = `Time remaining: ${formatTime(timeRemaining)}`;
+            timeRemaining--;
+        }
+
+        // Initialize and start the timer if locked out
+        if (isLockedOut && timeRemaining > 0) {
+            updateCountdown(); // Call immediately to show time
+            const countdownInterval = setInterval(updateCountdown, 1000);
+        }
+    </script>
+
+</body>
+</html>
