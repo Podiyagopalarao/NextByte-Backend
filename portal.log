@@ -125,3 +125,6 @@ WARNING 2025-12-14 16:27:54,876 views 13308 15408 Failed login attempt for user:
 INFO 2025-12-14 16:28:09,332 views 13308 15408 User login successful: Gopi
 WARNING 2025-12-15 10:18:05,487 views 23360 9228 Failed login attempt for user: mn.
 INFO 2025-12-15 11:05:03,810 views 23360 16688 User login successful: Gopi
+INFO 2025-12-15 11:47:24,511 views SUCCESS: User Gopi logged in successfully. Previous attempts cleared.
+INFO 2025-12-15 11:52:46,477 views SUCCESS: User Gopi logged in successfully. Attempts cleared.
+ERROR 2025-12-15 11:57:14,442 views LOCKOUT: User wwt2wt2t4wtf locked out for 300s after 5 failed attempts.

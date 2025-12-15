@@ -1,43 +1,102 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextByte Portal - {% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'portal/style.css' %}">
+    <title>{% block title %}Tech Navigator - CareerGuide Portal{% endblock %}</title> 
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
 </head>
 <body>
 
-    <nav>
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'resources' %}">Resources</a>
-        
-        {% if user.is_authenticated %}
-            <div style="float: right;">
-                <span style="color: white; padding: 14px 16px;">User: {{ user.username }}</span>
-                <a href="{% url 'logout' %}">Logout</a>
-            </div>
-        {% else %}
-            <div style="float: right;">
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}">Register</a>
-            </div>
-        {% endif %}
-    </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">
+                <i class="fas fa-graduation-cap me-2"></i> Tech Navigator - CareerGuide
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+                    {% if user.is_authenticated %}
+                        <li class="nav-item me-3"> 
+                            <a class="nav-link fw-bold text-white {% if request.path == '/dashboard/' or request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'dashboard' %}">
+                                Home
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item me-3">
+                            <a class="nav-link fw-bold text-warning {% if request.path == '/programs/' %}active{% endif %}" href="{% url 'programs' %}">
+                                Company Programs
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item me-3">
+                            <a class="nav-link fw-bold text-info {% if request.path == '/projects/' %}active{% endif %}" href="{% url 'projects' %}"> 
+                                Project Ideas
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item me-3">
+                            <a class="nav-link fw-bold text-danger" href="#"> 
+                                Coding Practice
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-light {% if request.path == '/resources/' %}active{% endif %}" href="{% url 'resources' %}">
+                                Resources
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
 
-    <div class="content">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link text-white me-2">Welcome, {{ user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-outline-light" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item me-2">
+                            <a class="btn btn-sm btn-outline-light" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-warning" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        
         {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
         {% endif %}
 
         {% block content %}
         {% endblock %}
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+
 </body>
 </html>

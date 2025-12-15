@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Company Programs{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4 text-center text-warning">Company Programs</h1>
+    <p class="lead text-center text-muted">A directory of internships, contests, and training opportunities from various tech companies.</p>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-10">
+            <div class="card shadow-lg border-start border-warning border-4">
+                <div class="card-header bg-warning text-dark fw-bold">
+                    <h5 class="mb-0">Add a New Program</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field|add_class:"form-control" }}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-warning mt-3 fw-bold">Submit Program</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for group_name, programs in program_groups.items %}
+        <div class="mt-5">
+            <h2 class="border-bottom border-warning border-3 pb-2 mb-4 text-secondary">{{ group_name }}</h2>
+            
+            {% if programs %}
+                <div class="row">
+                {% for program in programs %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm border-start border-4 border-warning">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary fw-bold">{{ program.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ program.company_name }}</h6>
+                                <p class="card-text small">{{ program.description|truncatechars:100 }}</p>
+                            </div>
+                            <div class="card-footer bg-light border-0 d-flex justify-content-between align-items-center small">
+                                <div>
+                                    <span class="badge bg-secondary me-2">{{ program.get_program_type_display }}</span>
+                                    {% if program.deadline %}
+                                        <span class="text-danger">Deadline: {{ program.deadline|date:"M j, Y" }}</span>
+                                    {% else %}
+                                        <span class="text-success">Rolling Application</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ program.link }}" target="_blank" class="btn btn-sm btn-outline-warning fw-bold">Apply Now &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    No {{ group_name|lower }} found yet.
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    
+</div>
+{% endblock content %}

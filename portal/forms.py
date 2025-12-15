@@ -1,49 +1,51 @@
-# portal/forms.py
-
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.forms import UserCreationForm as DjangoUserCreationForm 
-
-# --- Import your project models ---
-from .models import Resource, CustomUser 
-
-
-# --- Custom Registration Form (Fixed for CustomUser) ---
-
-class CustomUserCreationForm(DjangoUserCreationForm):
-    """
-    Form using the CustomUser model for registration.
-    """
-    class Meta(DjangoUserCreationForm.Meta):
-        model = CustomUser
-        fields = ('username', 'email') 
+# Ensure both models are imported
+from .models import Resource, CompanyProgram 
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 
-# --- LoginForm (Cleaned: Standard AuthenticationForm) ---
-
-class LoginForm(AuthenticationForm):
-    """
-    Standard AuthenticationForm.
-    """
-    username = forms.CharField(max_length=254, 
-                               widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'}))
-    password = forms.CharField(label=("Password"),
-                               widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+# 1. Login Form
+class LoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 
-# --- ResourceForm (Final Version with 'url' field) ---
+# 2. Registration Form
+class UserRegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = UserCreationForm.Meta.fields
 
+
+# 3. Resource Form
 class ResourceForm(forms.ModelForm):
-    """
-    Form for adding Resources (Projects or Programs).
-    """
     class Meta:
         model = Resource
-        # >>> FINAL FIX: 'url' field is added back here.
-        fields = ['title', 'description', 'url', 'resource_type'] 
+        fields = ['title', 'description', 'url', 'resource_type']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'url': forms.URLInput(attrs={'class': 'form-control'}), # This widget is now active
-            'resource_type': forms.Select(attrs={'class': 'form-control'}),
+            'url': forms.URLInput(attrs={'class': 'form-control'}),
+            'resource_type': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+
+# 4. Program Form (THIS IS THE MISSING CLASS)
+class ProgramForm(forms.ModelForm):
+    deadline = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        label='Application Deadline (Optional)'
+    )
+
+    class Meta:
+        model = CompanyProgram
+        fields = ['title', 'company_name', 'description', 'program_type', 'link', 'deadline']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'company_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'program_type': forms.Select(attrs={'class': 'form-select'}),
+            'link': forms.URLInput(attrs={'class': 'form-control'}),
         }
